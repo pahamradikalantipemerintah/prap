@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Kumpulan penganut paham radikal, penyebar HOAX, dan anti pemerintah</title>
+    <link href="https://cdn.jsdelivr.net/npm/clusterize.js@0.18.1/clusterize.min.css" rel="stylesheet">
+    <style>
+        table {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        table td, table th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        table tr:hover {
+            background-color: #ddd;
+        }
+
+        table th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+        }
+
+        table td:nth-child(1), table td:nth-child(2), table th:nth-child(1), table th:nth-child(2) {
+            width: 150px;
+            min-width: 150px;
+            max-width: 150px;
+            vertical-align: top;
+        }
+
+        .scrollDiv {
+            max-height: 90vh;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="clusterize">
+    <table>
+        <thead>
+        <tr>
+            <th>Tanggal</th>
+            <th>No WA</th>
+            <th>Message</th>
+        </tr>
+        </thead>
+    </table>
+    <div id="scrollArea" class="clusterize-scroll scrollDiv">
+        <table>
+            <tbody id="contentArea" class="clusterize-content">
+            <tr class="clusterize-no-data">
+                <td>Loading data…</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/clusterize.js@0.18.1/clusterize.min.js"></script>
+<script>
+    window.onload = function () {
+        clusterize = new Clusterize({
+            rows: [],
+            scrollId: 'scrollArea',
+            contentId: 'contentArea'
+        });
+
+        function loadJsonRec(urls, callback) {
+            var url = urls.pop();
+            if (!url) {
+                clusterize.refresh();
+                return;
+            }
+            var xhr = new XMLHttpRequest();
+            console.log('load ' + url);
+            xhr.open('GET', 'data/' + url);
+            xhr.responseType = 'json';
+            xhr.onload = function () {
+                callback(xhr);
+                loadJsonRec(urls, callback)
+            };
+            xhr.send();
+        }
+
+        loadJsonRec(['sum.json'], function (x1) {
+            loadJsonRec(x1.response, function (x2) {
+                var finalData = [];
+                for (var msg of x2.response) {
+                    finalData.push('<tr><td>' + msg.dt + '</td><td>' + msg.no + '</td><td>' + msg.msg + '</td></tr>')
+                }
+                clusterize.append(finalData);
+            })
+        });
+    };
+</script>
+</body>
+</html>
