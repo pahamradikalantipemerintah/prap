@@ -4,7 +4,7 @@ const _ = require('lodash');
 const fs = require('fs');
 const Message = require('./message.js');
 
-async function persister(messages) {
+module.exports=async function (messages) {
     const sumJson = './data/sum.json';
     let sum = new Set(loadJsonFile.sync(sumJson));
     for (let [index, msgList] of Object.entries(_.groupBy(messages, 'index'))) {
@@ -30,10 +30,4 @@ async function persister(messages) {
         sum.add(index)
     }
     writeJsonFile.sync(sumJson, [...sum].sort().reverse(), {indent: null})
-}
-
-for (const oldJsonArr of loadJsonFile.sync('./data-old/sum.json')) {
-    for (const oldJson of loadJsonFile.sync(`./data-old/${oldJsonArr}`)) {
-        persister([Message.fromJSON(oldJson)])
-    }
 }

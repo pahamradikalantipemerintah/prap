@@ -39,5 +39,3 @@ async function extract(readStream) {
     await once(unzip, 'finish');
     return tmpFile.name
 }
-
-processTxt('./data-sample/prap.txt');
