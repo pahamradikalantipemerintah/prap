@@ -7,21 +7,17 @@ const Message = require('./message.js');
 module.exports=async function (messages) {
     const sumJson = './data/sum.json';
     let sum = new Set(loadJsonFile.sync(sumJson));
-    for (let [index, msgList] of Object.entries(_.groupBy(messages, 'index'))) {
+    for (let [index, newJsonMsg] of Object.entries(_.groupBy(messages, 'index'))) {
         const jsonFile = `./data/${index}`;
         if (!fs.existsSync(jsonFile)) {
             writeJsonFile.sync(jsonFile, [])
         }
         let data = loadJsonFile.sync(jsonFile);
         const uniqueMsg = data.reduce((res, curr) => res.add(curr.msg), new Set());
-        for (const msg of msgList) {
-            if (!uniqueMsg.has(msg)) {
-                uniqueMsg.add(msg);
-                try {
-                    data.push(msg.toJSON());
-                } catch (e) {
-                    console.log(e)
-                }
+        for (const jsonMsg of newJsonMsg) {
+            if (!uniqueMsg.has(jsonMsg.msg)) {
+                uniqueMsg.add(jsonMsg.msg);
+                data.push(jsonMsg.toJSON());
             }
         }
         data.sort((a, b) => a.id - b.id);
