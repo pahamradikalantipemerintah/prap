@@ -16,6 +16,7 @@ module.exports = async function (filePath) {
     });
     let messages = [];
     txt.on('line', function (line) {
+        line=line.replace(/[\u202a-\u202c]/,"")
         let result;
         for (const regex of regexes) {
             result = regex.exec(line);
