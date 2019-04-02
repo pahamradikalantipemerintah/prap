@@ -4,10 +4,11 @@ const {createInterface} = require('readline');
 const {createReadStream} = require('fs');
 const {once} = require('events');
 
-const regex1 = /^(\d\d?\/\d\d?\/\d\d, \d\d?:\d\d?) - .(.+).: (.+)$/;
+const regex1 = /^(\d\d?\/\d\d?\/\d\d, \d\d?:\d\d?) - (.+): (.+)$/;
 const regex2 = /^(\d\d?\/\d\d?\/\d\d, \d\d?:\d\d?) - (.+)$/;
 const regex3 = /^(\d\d?\/\d\d?\/\d\d, \d\d?:\d\d? [A|P]M) - \+(.+?): (.*)$/;
-const regexes = [regex1, regex2, regex3];
+const regex4 = /^(\d\d?\/\d\d?\/\d\d, \d\d?:\d\d? [A|P]M) - (.+)$/;
+const regexes = [regex1, regex2, regex3, regex4];
 
 module.exports = async function (filePath) {
     console.log("processing file: " + filePath);
@@ -16,7 +17,7 @@ module.exports = async function (filePath) {
     });
     let messages = [];
     txt.on('line', function (line) {
-        line=line.replace(/[\u202a-\u202c]/,"")
+        line = line.replace(/[\u202a-\u202c]/g, "")
         let result;
         for (const regex of regexes) {
             result = regex.exec(line);
