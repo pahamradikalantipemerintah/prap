@@ -4,7 +4,7 @@ const _ = require('lodash');
 const fs = require('fs');
 const Message = require('./message.js');
 
-module.exports=async function (messages) {
+module.exports = function (messages) {
     const sumJson = './data/sum.json';
     let sum = new Set(loadJsonFile.sync(sumJson));
     for (let [index, newJsonMsg] of Object.entries(_.groupBy(messages, 'index'))) {
@@ -13,10 +13,10 @@ module.exports=async function (messages) {
             writeJsonFile.sync(jsonFile, [])
         }
         let data = loadJsonFile.sync(jsonFile);
-        const uniqueMsg = data.reduce((res, curr) => res.add(curr.msg), new Set());
+        const uniqueMsg = data.reduce((res, curr) => res.add(curr.msgHash), new Set());
         for (const jsonMsg of newJsonMsg) {
-            if (!uniqueMsg.has(jsonMsg.msg)) {
-                uniqueMsg.add(jsonMsg.msg);
+            if (!uniqueMsg.has(jsonMsg.msgHash)) {
+                uniqueMsg.add(jsonMsg.msgHash);
                 data.push(jsonMsg.toJSON());
             }
         }
@@ -25,5 +25,5 @@ module.exports=async function (messages) {
         console.log('finish update json: ' + jsonFile);
         sum.add(index)
     }
-    writeJsonFile.sync(sumJson, [...sum].sort().reverse(), {indent: null})
-}
+    writeJsonFile.sync(sumJson, [...sum].sort(), {indent: null})
+};

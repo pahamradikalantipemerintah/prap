@@ -1,5 +1,4 @@
-//"id":1804251847,"dt":"25-Apr-2018 18:47","no":"+62 838-1280-4116","msg":"<span>&lt;Media omitted&gt;</span>"}
-//12/3/18, 12:10 - ‪+62 822-6055-9615‬: <Media omitted>
+const hash = require('string-hash')
 const moment = require('moment');
 
 module.exports = class Message {
@@ -25,7 +24,7 @@ module.exports = class Message {
     }
 
     get index() {
-        return this._id.format("YYMM/DD") + '.json'
+        return this._id.format("YYMM") + '.json'
     }
 
     get no() {
@@ -36,17 +35,21 @@ module.exports = class Message {
         return this._msg
     }
 
+    get msgHash() {
+        return hash(this._msg)
+    }
+
     static fromJSON(obj) {
         return new Message(["", moment(obj.id, 'YYMMDDHHmm').format('M/D/YY, h:m A'), obj.no, obj.msg])
     }
 
     append(msg) {
-        this._msg += '\n' + msg
+        this._msg += '\r\n' + msg
     }
 
     toJSON() {
         const json = {};
-        ['id', 'dt', 'no', 'msg'].forEach(prop => json[prop] = this[prop]);
+        ['id', 'dt', 'no', 'msg', 'msgHash'].forEach(prop => json[prop] = this[prop]);
         return json
     }
 };

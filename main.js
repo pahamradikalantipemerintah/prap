@@ -39,9 +39,3 @@ async function extract(readStream) {
     await once(unzip, 'finish');
     return tmpFile.name
 }
-
-for (const file of fs.readdirSync('./data-sample')) {
-    if (file.endsWith(".txt")) {
-        processTxt('./data-sample/' + file)
-    }
-}

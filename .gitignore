@@ -254,3 +254,5 @@ fabric.properties
 data-sample/
 data-old/
 .idea/
+data-daily/
+test.js

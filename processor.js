@@ -10,8 +10,7 @@ const regex3 = /^(\d\d?\/\d\d?\/\d\d, \d\d?:\d\d? [A|P]M) - \+(.+?): (.*)$/;
 const regex4 = /^(\d\d?\/\d\d?\/\d\d, \d\d?:\d\d? [A|P]M) - (.+)$/;
 const regexes = [regex1, regex2, regex3, regex4];
 
-module.exports = async function (filePath) {
-    console.log("processing file: " + filePath);
+module.exports = function (filePath) {
     const txt = createInterface({
         input: createReadStream(filePath)
     });
@@ -32,6 +31,9 @@ module.exports = async function (filePath) {
             else
                 console.log('ignore line: ' + line)
     });
-    await once(txt, 'close');
-    await persist(messages)
+    (async () => {
+        await once(txt, 'close');
+        console.log("finish reading file: " + filePath);
+        persist(messages)
+    })();
 };

@@ -45,6 +45,12 @@
             max-height: 90vh;
             overflow: auto;
         }
+
+        pre {
+            font-family: serif, Arial;
+            margin: 0;
+            white-space: pre-wrap;
+        }
     </style>
 </head>
 <body>
@@ -77,6 +83,14 @@
             contentId: 'contentArea'
         });
 
+        function htmlEntities(str) {
+            if (str.startsWith('<span>'))
+                return str;
+            var p = document.createElement("p");
+            p.textContent = str;
+            return '<pre>' + p.innerHTML + '</pre>';
+        }
+
         function loadJsonRec(urls, callback) {
             var url = urls.pop();
             if (!url) {
@@ -98,7 +112,8 @@
             loadJsonRec(x1.response, function (x2) {
                 var finalData = [];
                 for (var msg of x2.response) {
-                    finalData.push('<tr><td>' + msg.dt + '</td><td>' + msg.no + '</td><td>' + msg.msg + '</td></tr>')
+                    finalData.push('<tr><td>' + msg.dt + '</td><td>' + msg.no
+                        + '</td><td>' + htmlEntities(msg.msg) + '</td></tr>')
                 }
                 clusterize.append(finalData);
             })
