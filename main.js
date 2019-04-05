@@ -4,25 +4,32 @@ const fs = require('fs');
 const unzipper = require('unzipper');
 const {once} = require('events');
 const processTxt = require('./processor.js');
+const uploader = require('./uploader.js');
 
-const filenamePrefix = new Buffer("IldoYXRzQXBwIENoYXQgd2l0aCI=", 'base64').toString('ascii');
+const filenamePrefix = new Buffer("V2hhdHNBcHAgQ2hhdCB3aXRo", 'base64').toString('ascii');
 const maildev = new MailDev();
 
 maildev.listen();
 
 maildev.on('new', email => {
-    email.attachments.forEach(attachment => {
-        if (attachment.fileName.startsWith(filenamePrefix))
-            maildev.getEmailAttachment(email.id, attachment.fileName, (err, contentType, readStream) => {
-                if (contentType === "application/zip") extract(readStream).then(processTxt);
-                if (contentType === "text/plain") {
-                    const tmpFile = tmp.fileSync();
-                    readStream.pipe(fs.createWriteStream(tmpFile.name)).on('finish', () => {
-                        processTxt(tmpFile.name)
-                    })
-                }
-            })
-    })
+    if (!email.attachments) {
+        console.log(`email ${email.subject} has no attachment`)
+    } else {
+        global.mailIsRun = true;
+        email.attachments.forEach(attachment => {
+            if (attachment.fileName.startsWith(filenamePrefix))
+                maildev.getEmailAttachment(email.id, attachment.fileName, (err, contentType, readStream) => {
+                    if (contentType === "application/zip") extract(readStream).then(processTxt);
+                    if (contentType === "text/plain") {
+                        const tmpFile = tmp.fileSync();
+                        readStream.pipe(fs.createWriteStream(tmpFile.name)).on('finish', () => {
+                            processTxt(tmpFile.name)
+                        })
+                    }
+                })
+        });
+        global.mailIsRun = false;
+    }
 });
 
 async function extract(readStream) {
@@ -39,3 +46,5 @@ async function extract(readStream) {
     await once(unzip, 'finish');
     return tmpFile.name
 }
+
+setInterval(uploader, 3600e3)

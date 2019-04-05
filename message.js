@@ -1,4 +1,4 @@
-const hash = require('string-hash')
+const hash = require('string-hash');
 const moment = require('moment');
 
 module.exports = class Message {

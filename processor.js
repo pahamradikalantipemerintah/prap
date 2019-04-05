@@ -11,12 +11,13 @@ const regex4 = /^(\d\d?\/\d\d?\/\d\d, \d\d?:\d\d? [A|P]M) - (.+)$/;
 const regexes = [regex1, regex2, regex3, regex4];
 
 module.exports = function (filePath) {
+    global.processorIsRun = true;
     const txt = createInterface({
         input: createReadStream(filePath)
     });
     let messages = [];
     txt.on('line', function (line) {
-        line = line.replace(/[\u202a-\u202c]/g, "")
+        line = line.replace(/[\u202a-\u202c]/g, "");
         let result;
         for (const regex of regexes) {
             result = regex.exec(line);
@@ -34,6 +35,7 @@ module.exports = function (filePath) {
     (async () => {
         await once(txt, 'close');
         console.log("finish reading file: " + filePath);
-        persist(messages)
+        persist(messages);
+        global.processorIsRun = false;
     })();
 };
