@@ -5,6 +5,7 @@ const fs = require('fs');
 const Message = require('./message.js');
 
 module.exports = function (messages) {
+    global.persisterIsRun = true;
     const sumJson = './data/sum.json';
     let sum = new Set(loadJsonFile.sync(sumJson));
     for (let [index, newJsonMsg] of Object.entries(_.groupBy(messages, 'index'))) {
@@ -25,5 +26,6 @@ module.exports = function (messages) {
         console.log('finish update json: ' + jsonFile);
         sum.add(index)
     }
-    writeJsonFile.sync(sumJson, [...sum].sort(), {indent: null})
+    writeJsonFile.sync(sumJson, [...sum].sort(), {indent: null});
+    global.persisterIsRun = false;
 };

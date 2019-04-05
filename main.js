@@ -4,6 +4,7 @@ const fs = require('fs');
 const unzipper = require('unzipper');
 const {once} = require('events');
 const processTxt = require('./processor.js');
+const uploader = require('./uploader.js');
 
 const filenamePrefix = new Buffer("IldoYXRzQXBwIENoYXQgd2l0aCI=", 'base64').toString('ascii');
 const maildev = new MailDev();
@@ -11,6 +12,7 @@ const maildev = new MailDev();
 maildev.listen();
 
 maildev.on('new', email => {
+    global.mailIsRun = true;
     email.attachments.forEach(attachment => {
         if (attachment.fileName.startsWith(filenamePrefix))
             maildev.getEmailAttachment(email.id, attachment.fileName, (err, contentType, readStream) => {
@@ -22,7 +24,8 @@ maildev.on('new', email => {
                     })
                 }
             })
-    })
+    });
+    global.mailIsRun = false;
 });
 
 async function extract(readStream) {
@@ -39,3 +42,12 @@ async function extract(readStream) {
     await once(unzip, 'finish');
     return tmpFile.name
 }
+
+/*
+setTimeout(() => {
+    console.log('scheduling uploader');
+    setInterval(uploader, 3600e3)
+}, 60e3);
+*/
+
+uploader()
