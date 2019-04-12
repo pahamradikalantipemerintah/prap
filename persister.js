@@ -22,7 +22,7 @@ module.exports = function (messages) {
                 data.push(jsonMsg.toJSON());
             }
         }
-        data.sort((a, b) => a.id - b.id);
+        data.sort((a, b) => b.id - a.id);
         writeJsonFile.sync(jsonFile, data, {indent: null});
         console.log('finish update json: ' + jsonFile);
         sum.add(index)
