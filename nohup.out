@@ -9,3 +9,6 @@ finish reading file: /tmp/tmp-2440716xNEDJxUo7H
 finish update json: ./data/1904.json
 finish reading file: /tmp/tmp-24407oPDV7G7Q5M4k
 finish update json: ./data/1904.json
+fatal: could not read Username for 'https://github.com': No such device or address
+
+last upload check: 1555089791303
