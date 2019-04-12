@@ -1,0 +1,11 @@
+MailDev webapp running at http://0.0.0.0:1080
+(node:23941) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+MailDev SMTP Server running at 0.0.0.0:1025
+Recieved shutdown signal, shutting down now...
+MailDev webapp running at http://0.0.0.0:1080
+(node:24407) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+MailDev SMTP Server running at 0.0.0.0:1025
+finish reading file: /tmp/tmp-2440716xNEDJxUo7H
+finish update json: ./data/1904.json
+finish reading file: /tmp/tmp-24407oPDV7G7Q5M4k
+finish update json: ./data/1904.json
