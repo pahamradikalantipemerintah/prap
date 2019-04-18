@@ -99,3 +99,9 @@ last upload check: 1555190593437
 fatal: could not read Username for 'https://github.com': No such device or address
 
 last upload check: 1555194193485
+fatal: could not read Username for 'https://github.com': No such device or address
+
+last upload check: 1555197793586
+Could not start mail server on undefined:undefined
+Port already in use or insufficient rights to bind port
+Recieved shutdown signal, shutting down now...
